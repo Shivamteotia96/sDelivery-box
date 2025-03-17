@@ -1,18 +1,19 @@
-name: Install Dependencies & Build
-- name: Install Backend Dependencies
-  run: |
-    cd backend
-    npm install
+name: CI/CD Pipeline
 
-
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -20,17 +21,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Backend Dependencies
-        run: |
-          cd backend
-          npm install
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install Frontend Dependencies
-        run: |
-          cd frontend
-          npm install
-
-      - name: Build Frontend
-        run: |
-          cd frontend
-          npm run build
+      - name: Run Tests
+        run: npm test

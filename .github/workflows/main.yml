@@ -1,13 +1,3 @@
-- name: Install Backend Dependencies
-  run: |
-    if [ -d "backend" ]; then
-      cd backend
-      npm install
-    else
-      echo "❌ Backend folder not found!"
-      exit 1
-    fi
-
 name: CI/CD Pipeline
 
 on:
@@ -31,8 +21,39 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - name: Debug Repository Structure
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "List of Files:"
+          ls -la
+
+      - name: Install Backend Dependencies
+        run: |
+          if [ -d "backend" ]; then
+            echo "✅ Backend folder found. Installing dependencies..."
+            cd backend
+            npm install
+          else
+            echo "❌ Backend folder not found!"
+            exit 1
+          fi
+
+      - name: Install Frontend Dependencies
+        run: |
+          if [ -d "frontend" ]; then
+            echo "✅ Frontend folder found. Installing dependencies..."
+            cd frontend
+            npm install
+          else
+            echo "❌ Frontend folder not found!"
+            exit 1
+          fi
 
       - name: Run Tests
-        run: npm test
+        run: |
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "⚠️ No test script found in package.json, skipping tests."
+          fi

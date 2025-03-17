@@ -1,3 +1,13 @@
+- name: Install Backend Dependencies
+  run: |
+    if [ -d "backend" ]; then
+      cd backend
+      npm install
+    else
+      echo "❌ Backend folder not found!"
+      exit 1
+    fi
+
 name: CI/CD Pipeline
 
 on:

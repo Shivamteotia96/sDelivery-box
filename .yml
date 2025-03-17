@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Backend Dependencies
+        run: |
+          if [ -d "backend" ]; then
+            cd backend
+            npm install
+          else
+            echo "❌ Backend folder not found!"
+            exit 1
+          fi
+
+      - name: Run Tests
+        run: |
+          cd backend
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "⚠️ No test script found, skipping tests."
+          fi

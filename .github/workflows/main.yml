@@ -1,4 +1,9 @@
 name: Install Dependencies & Build
+- name: Install Backend Dependencies
+  run: |
+    cd backend
+    npm install
+
 
 on: [push, pull_request]
 
